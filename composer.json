@@ -1,0 +1,20 @@
+{
+    "name": "marcospaegle/asaas",
+    "description": "Unofficial Asaas SDK",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Marcos Paegle",
+            "email": "marcos.paegle@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.1.5"
+    },
+    "autoload": {
+        "psr-0": {
+            "Asaas": "src/"
+        }
+    }
+}
