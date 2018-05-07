@@ -171,7 +171,7 @@ class AsaasChargeBuilder
                 throw $e;
             }
 
-            var_dump($data);
+            return $this->charge->fill($data);
         } catch (\Exception $e) {
             throw $e;
         } catch (\Throwable $e) {
