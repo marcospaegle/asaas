@@ -10,7 +10,7 @@ abstract class Model
     public function __get($name)
     {
         if (!array_key_exists($name, $this->attributes)) {
-            throw new \Exception("$name não existe");
+            return null;
         }
 
         return $this->attributes[$name];
