@@ -2,7 +2,6 @@
 
 namespace Asaas;
 
-
 class Subscription extends Model
 {
     private function __construct(array $data=[])

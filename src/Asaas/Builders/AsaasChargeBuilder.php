@@ -4,6 +4,7 @@ namespace Asaas\Builders;
 
 use Asaas\Asaas;
 use Asaas\Charge;
+use Asaas\Curl;
 use Asaas\Exception\AsaasException;
 
 class AsaasChargeBuilder
@@ -11,10 +12,6 @@ class AsaasChargeBuilder
     private $asaas;
     private $charge;
 
-    /**
-     * AsaasBuilder constructor.
-     * @param $asaas
-     */
     public function __construct(Asaas $asaas, Charge $charge)
     {
         $this->asaas = $asaas;
@@ -31,22 +28,7 @@ class AsaasChargeBuilder
             $url = $this->asaas->getUrl() . "/payments/$chargeId";
             $headers = $this->asaas->getHeaders();
 
-            $ch = curl_init();
-
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
-            curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
-
-            $result = curl_exec($ch);
-            if (curl_errno($ch)) {
-                throw new \Exception('Request Error: ' . curl_errno($ch) . ' ' . curl_error($ch));
-            }
-            curl_close($ch);
-
-            $data = json_decode($result, true);
+            $data = Curl::get($url, $headers);
             if (isset($data['errors'])) {
                 $e = new AsaasException();
                 $e->setErrors($data['errors']);
@@ -71,22 +53,7 @@ class AsaasChargeBuilder
             }
             $headers = $this->asaas->getHeaders();
 
-            $ch = curl_init();
-
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
-            curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
-
-            $result = curl_exec($ch);
-            if (curl_errno($ch)) {
-                throw new \Exception('Request Error: ' . curl_errno($ch) . ' ' . curl_error($ch));
-            }
-            curl_close($ch);
-
-            $data = json_decode($result, true);
+            $data = Curl::get($url, $headers);
             if (isset($data['errors'])) {
                 $e = new AsaasException();
                 $e->setErrors($data['errors']);
@@ -143,24 +110,7 @@ class AsaasChargeBuilder
             $url = $this->asaas->getUrl() . '/payments';
             $headers = $this->asaas->getHeaders();
 
-            $ch = curl_init();
-
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-            curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
-            curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
-
-            $result = curl_exec($ch);
-            if (curl_errno($ch)) {
-                throw new \Exception('Request Error: ' . curl_errno($ch) . ' ' . curl_error($ch));
-            }
-            curl_close($ch);
-
-            $data = json_decode($result, true);
+            $data = Curl::post($url, $data, $headers);
             if (isset($data['errors'])) {
                 $e = new AsaasException();
                 $e->setErrors($data['errors']);
@@ -182,26 +132,7 @@ class AsaasChargeBuilder
             $url = $this->asaas->getUrl() . '/payments/' . $charge->id;
             $headers = $this->asaas->getHeaders();
 
-            $data = $charge->toArray();
-
-            $ch = curl_init();
-
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-            curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
-            curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
-
-            $result = curl_exec($ch);
-            if (curl_errno($ch)) {
-                throw new \Exception('Request Error: ' . curl_errno($ch) . ' ' . curl_error($ch));
-            }
-            curl_close($ch);
-
-            $data = json_decode($result, true);
+            $data = Curl::get($url, $charge->toArray(), $headers);
             if (isset($data['errors'])) {
                 $e = new AsaasException();
                 $e->setErrors($data['errors']);
@@ -223,23 +154,7 @@ class AsaasChargeBuilder
             $url = $this->asaas->getUrl() . '/payments/' . $charge->id;
             $headers = $this->asaas->getHeaders();
 
-            $ch = curl_init();
-
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
-            curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
-
-            $result = curl_exec($ch);
-            if (curl_errno($ch)) {
-                throw new \Exception('Request Error: ' . curl_errno($ch) . ' ' . curl_error($ch));
-            }
-            curl_close($ch);
-
-            $data = json_decode($result, true);
+            $data = Curl::delete($url, $headers);
             if (isset($data['errors'])) {
                 $e = new AsaasException();
                 $e->setErrors($data['errors']);
@@ -267,23 +182,7 @@ class AsaasChargeBuilder
             $url = $this->asaas->getUrl() . '/payments/' . $charge->id . '/refund';
             $headers = $this->asaas->getHeaders();
 
-            $ch = curl_init();
-
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
-            curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
-
-            $result = curl_exec($ch);
-            if (curl_errno($ch)) {
-                throw new \Exception('Request Error: ' . curl_errno($ch) . ' ' . curl_error($ch));
-            }
-            curl_close($ch);
-
-            $data = json_decode($result, true);
+            $data = Curl::post($url, $headers);
             if (isset($data['errors'])) {
                 $e = new AsaasException();
                 $e->setErrors($data['errors']);
@@ -325,24 +224,7 @@ class AsaasChargeBuilder
             $url = $this->asaas->getUrl() . '/payments/' . $data['id'] . '/receiveInCash';
             $headers = $this->asaas->getHeaders();
 
-            $ch = curl_init();
-
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-            curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
-            curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
-
-            $result = curl_exec($ch);
-            if (curl_errno($ch)) {
-                throw new \Exception('Request Error: ' . curl_errno($ch) . ' ' . curl_error($ch));
-            }
-            curl_close($ch);
-
-            $data = json_decode($result, true);
+            $data = Curl::post($url, $headers);
             if (isset($data['errors'])) {
                 $e = new AsaasException();
                 $e->setErrors($data['errors']);

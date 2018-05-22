@@ -2,7 +2,6 @@
 
 namespace Asaas;
 
-
 abstract class Model
 {
     protected $attributes;
